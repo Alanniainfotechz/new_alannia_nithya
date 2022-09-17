@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="web_template_inherit" inherit_id="sale.sale_order_portal_content">
+            <xpath expr="//em[@t-esc='sale_order.name']" position="after">
+                <div>
+                    <form action="/order/repeat" method="post"  enctype="multipart/form-data" id="file_upload_form">
+                            <div t-attf-class="form-group">
+                                <div>
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input type="hidden" name="name" t-att-value="sale_order.name"/>
+                                    <input type="hidden" name="order_id" t-att-value="sale_order.id"/>
+                                    <button type="submit" name="Repeat Order" title="Reorder this SO"  class="fa fa-repeat btn btn-primary ml-4">
+                                        Reorder
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

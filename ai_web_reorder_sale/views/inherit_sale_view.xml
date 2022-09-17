@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_order_form_inherit_sale_so_repeat_ref" model="ir.ui.view">
+                    <field name="name">view_order_form_inherit_sale_so_repeat_ref</field>
+                    <field name="model">sale.order</field>
+                    <field name="inherit_id" ref="sale.view_order_form"/>
+                    <field name="arch" type="xml">
+                        <xpath expr="//field[@name='payment_term_id']" position="after">
+                            <field name="reference_sale" attrs="{'invisible': [('repeat_order', '=', False)]}"/>
+                            <field name="sale_ref_name" attrs="{'invisible': [('repeat_order', '=', False)]}"/>
+                            <field name="repeat_order" invisible="1"/>
+                        </xpath>
+                    </field>
+        </record>
+    </data>
+</odoo>

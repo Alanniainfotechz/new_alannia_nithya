@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+         <template id="web_template_inherit_from_exit_sal_order" inherit_id="website_sale.cart_lines">
+            <xpath expr="//table[@class='mb16 table table-striped table-sm js_cart_lines']" position="after">
+                <div class="mb16 table table-striped table-sm js_cart_lines">
+                     <t t-if="website_sale_order.repeat_order">
+                         <t><span>Exist Sale Order:</span></t>
+                            <strong><t t-esc="website_sale_order.reference_sale"/></strong>
+                    </t>
+                </div>
+            </xpath>
+         </template>
+
+        <template id="customer_approve_button_template" inherit_id="sale.portal_my_orders">
+            <xpath expr="//t[@t-if='orders']" position="replace">
+                <t t-if="orders" t-call="portal.portal_table">
+                    <thead>
+                        <tr class="active">
+                            <th style="width:16%">
+                                <span class='d-none d-md-inline'>Sales Order #</span>
+                                <span class='d-block d-md-none'>Ref.</span>
+                            </th>
+                            <th class="text-center" style="width:12%">Name</th>
+                            <th class="text-center" style="width:12%">Reorder</th>
+                            <th class="text-center" style="width:20%">Order Date</th>
+                            <th class="text-center" style="width:12%"/>
+                            <th class="text-center" style="width:12%"/>
+                            <th class="text-center" style="width:16%">Total</th>
+                        </tr>
+                    </thead>
+
+                   <t t-foreach="orders" t-as="order">
+                        <tr>
+                            <td><a t-att-href="order.get_portal_url()"><t t-esc="order.name"/></a></td>
+                            <td><span t-field="order.sale_ref_name" /></td>
+                            <td><span t-field="order.reference_sale" /></td>
+                            <td class="text-right">
+                                <span t-field="order.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
+                                <span class='d-none d-md-inline' t-field="order.date_order" t-options="{'time_only': True}"/>
+                            </td>
+                            <td class="text-center">
+                                <span t-if="order.state == 'done'"  class="badge badge-pill badge-success">
+                                    <i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done"/>Done
+                                </span>
+                            </td>
+                            <td>
+                                <div>
+                                    <form action="/order/repeat" method="post"  enctype="multipart/form-data" id="file_upload_form">
+                                            <div t-attf-class="form-group">
+                                                <div>
+                                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                    <input type="hidden" name="name" t-att-value="order.name"/>
+                                                    <input type="hidden" name="order_id" t-att-value="order.id"/>
+                                                    <button type="submit" name="Repeat Order" title="Reorder this SO"  class="fa fa-repeat btn btn-primary ml-4">
+                                                        Reorder
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                </div>
+                            </td>
+                            <td class="text-right"><span t-field="order.amount_total"/></td>
+                        </tr>
+                    </t>
+                </t>
+            </xpath>
+        </template>
+
+
+
+       <template id="web_template_inherit_comment_upload" inherit_id="website_sale.cart_lines">
+            <xpath expr="//table[@class='mb16 table table-striped table-sm js_cart_lines']" position="after">
+                <div>
+                    <t t-esc="website_sale_order.sale_ref_name"/>
+                    <div t-attf-class="form-group">
+                        <a role="button" data-toggle="modal" data-target="#modalpersonalnote" href="#" class="btn btn-primary mb5 fa fa-pencil">Write Your Reference</a>
+                            <div role="dialog" class="modal fade" id="modalpersonalnote">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="col-md-12">
+                                            <form action="/customer/submit/salename">
+                                                <div class="form-group">
+                                                    <div>
+                                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                        <input type="hidden" name="order_id" t-att-value="website_sale_order.id"/>
+                                                    </div>
+                                                    <label for="name">Enter Your Reference :</label>
+                                                    <textarea type="text" class="form-control" name="sale_name" id="name"  placeholder="Your ref Please......." required="true" ></textarea>
+                                                <button  class="btn btn-primary">Submit</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    </div>
+            </xpath>
+        </template>
+
+
+    </data>
+</odoo>
